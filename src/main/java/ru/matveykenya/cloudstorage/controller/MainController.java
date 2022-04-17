@@ -1,8 +1,17 @@
 package ru.matveykenya.cloudstorage.controller;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import ru.matveykenya.cloudstorage.entity.FileObject;
+import ru.matveykenya.cloudstorage.entity.User;
 import ru.matveykenya.cloudstorage.service.FileService;
 
+import java.awt.*;
+import java.io.FileNotFoundException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -15,31 +24,31 @@ public class MainController {
 
     //список файлов
     @GetMapping("/list")
-    public List<String> getListFiles(@RequestParam int limit) {
-        return service.getListFiles(limit);
+    public List<FileObject> getListFiles(@RequestParam int limit, Principal principal) {
+        return service.getListFiles(principal.getName(), limit);
     }
 
     //добавляем файл
-    @PostMapping("/file")
-    public String uploadFile(){
-        return "upload";
+    @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String uploadFile(@RequestParam MultipartFile file, Principal principal) {
+        return service.uploadFile(principal.getName(), file);
     }
 
     //Скачиваем файл
     @GetMapping("/file")
-    public String getFile(){
-        return "get file";
+    public ResponseEntity<Object> getFile(@RequestParam String filename, Principal principal) throws FileNotFoundException {
+        return service.getFile(filename, principal.getName());
     }
 
     //Изменяем файл
     @PutMapping("/file")
-    public String putFile(){
+    public String putFile(@RequestParam String filename, Principal principal){
         return "put file";
     }
 
     //Удаляем файл
     @DeleteMapping("/file")
-    public String delFile(@RequestParam String fileName){
-        return "del file";
+    public String delFile(@RequestParam String filename, Principal principal) throws FileNotFoundException {
+        return service.deleteFile(filename, principal.getName());
     }
 }

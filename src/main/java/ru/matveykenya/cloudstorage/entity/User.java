@@ -13,12 +13,8 @@ import javax.persistence.*;
 @Entity(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
     @Column(name ="username", length = 50, nullable = false)
-    private String login;
+    private String username;
 
     @Column(length = 50, nullable = false)
     private String password;
