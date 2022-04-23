@@ -77,4 +77,18 @@ public class FileService {
             throw new RuntimeException(ex);
         }
     }
+
+    public String renameFile(String filename, String newFilename, String userName) {
+        File file = new File(globalPath + "/" + userName + "/" + filename);
+        File newFile = new File(globalPath + "/" + userName + "/" + newFilename);
+        if (file.exists()&&!newFile.exists()){
+            if (file.renameTo(newFile)){
+                FileObject fileObject = repository.findByFilenameAndUser(filename, userRepository.findUserByUsername(userName));
+                fileObject.setFilename(newFilename);
+                repository.save(fileObject);
+                return "File " + filename + " renamed to " + newFilename + " successfully";
+            }
+        }
+        return "Error. The file does not exist or the new name is already taken.";
+    }
 }

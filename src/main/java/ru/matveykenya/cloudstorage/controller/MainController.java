@@ -2,14 +2,10 @@ package ru.matveykenya.cloudstorage.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.matveykenya.cloudstorage.entity.FileObject;
-import ru.matveykenya.cloudstorage.entity.User;
 import ru.matveykenya.cloudstorage.service.FileService;
-
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.security.Principal;
 import java.util.List;
@@ -40,10 +36,10 @@ public class MainController {
         return service.getFile(filename, principal.getName());
     }
 
-    //Изменяем файл
+    //Изменяем имя файла в хранилище
     @PutMapping("/file")
-    public String putFile(@RequestParam String filename, Principal principal){
-        return "put file";
+    public String putFile(@RequestParam String filename, @RequestParam String newFilename, Principal principal){
+        return service.renameFile(filename, newFilename, principal.getName());
     }
 
     //Удаляем файл
