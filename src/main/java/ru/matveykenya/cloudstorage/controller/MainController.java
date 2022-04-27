@@ -32,7 +32,7 @@ public class MainController {
 
     //Скачиваем файл
     @GetMapping("/file")
-    public ResponseEntity<Object> getFile(@RequestParam String filename, Principal principal) throws FileNotFoundException {
+    public ResponseEntity<Object> getFile(@RequestParam String filename, Principal principal) {
         return service.getFile(filename, principal.getName());
     }
 
