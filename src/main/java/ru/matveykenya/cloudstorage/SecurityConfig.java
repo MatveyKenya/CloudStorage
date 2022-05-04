@@ -36,6 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();
 
         http.csrf().disable();// без этого не работали PUT/POST/DELETE запросы, а только GET
+
+//        http
+//                .authorizeRequests()
+//                .anyRequest()
+//                .authenticated()
+//                .and()
+//                .httpBasic();
+//        http.csrf().disable();// без этого не работали PUT/POST/DELETE запросы, а только GET
+
     }
 
 }
