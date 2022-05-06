@@ -44,8 +44,6 @@ public class MainController {
             String username = requestDto.getLogin();
             System.out.println(username + "   " + requestDto.getPassword());
 
-            //todo - на этом моменте застрял
-            //на этой строчке застревает через Постман, а запрос через приложение ФРОН вообще сюда не добирается.
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
 
             User user = userService.findByUsername(username);
