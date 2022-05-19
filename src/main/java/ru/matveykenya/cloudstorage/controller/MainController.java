@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.matveykenya.cloudstorage.dto.AuthenticationRequestDto;
 import ru.matveykenya.cloudstorage.entity.FileObject;
 import ru.matveykenya.cloudstorage.entity.User;
-import ru.matveykenya.cloudstorage.jwt.JwtTokenProvider;
+import ru.matveykenya.cloudstorage.jwt.JwtTokenUtil;
 import ru.matveykenya.cloudstorage.service.FileService;
 import ru.matveykenya.cloudstorage.service.UserService;
 
@@ -28,13 +29,13 @@ public class MainController {
     private final FileService service;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    public MainController(FileService service, UserService userService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public MainController(FileService service, UserService userService, AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil) {
         this.service = service;
         this.userService = userService;
         this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @PostMapping("/login")
@@ -44,15 +45,17 @@ public class MainController {
             String username = requestDto.getLogin();
             System.out.println(username + "   " + requestDto.getPassword());
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+            authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
 
             User user = userService.findByUsername(username);
+
             if (user == null) {
                 throw new UsernameNotFoundException("User with username: " + username + " not found");
             }
 
             System.out.println("выдача token");
-            String token = jwtTokenProvider.createToken(username);
+            String token = jwtTokenUtil.createToken(username);
 
             Map<Object, Object> response = new HashMap<>();
             response.put("username", username);

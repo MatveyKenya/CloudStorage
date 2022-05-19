@@ -16,7 +16,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider {
+public class JwtTokenUtil {
 
     @Value("${jwt.token.secret}")
     private String secret;
@@ -26,7 +26,7 @@ public class JwtTokenProvider {
 
     final private UserService userService;
 
-    public JwtTokenProvider(UserService userService) {
+    public JwtTokenUtil(UserService userService) {
         this.userService = userService;
     }
 
@@ -57,10 +57,9 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        //UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-        //UserDetails userDetails = (UserDetails) userService.findByUsername(getUsername(token));
-        System.out.println("Находим Имя --- " + getUsername(token));
-        return new UsernamePasswordAuthenticationToken(userService.findByUsername(getUsername(token)), "");
+        UserDetails userDetails = userService.findByUsername(getUsername(token));
+        System.out.println(userDetails);
+        return new UsernamePasswordAuthenticationToken(userDetails, "");
     }
 
     public String getUsername(String token) {
@@ -71,7 +70,7 @@ public class JwtTokenProvider {
         return req.getHeader("auth-token");
     }
 
-    public boolean validateToken(String token) {
+    public boolean validate(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
 
@@ -83,6 +82,7 @@ public class JwtTokenProvider {
     }
 
 
+
 //    public String resolveToken(HttpServletRequest req) {
 //        String bearerToken = req.getHeader("auth-token");
 //        if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
@@ -90,12 +90,6 @@ public class JwtTokenProvider {
 //        }
 //        return null;
 //    }
-
-
-
-
-
-
 
     //    private List<String> getRoleNames(List<Role> userRoles) {
 //        List<String> result = new ArrayList<>();

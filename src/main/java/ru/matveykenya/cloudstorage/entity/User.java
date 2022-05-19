@@ -1,8 +1,11 @@
 package ru.matveykenya.cloudstorage.entity;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Builder
 @Getter
@@ -11,12 +14,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @Column(name ="username", length = 50, nullable = false)
     private String username;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -28,4 +31,23 @@ public class User {
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean enabled;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return enabled;
+    }
 }
