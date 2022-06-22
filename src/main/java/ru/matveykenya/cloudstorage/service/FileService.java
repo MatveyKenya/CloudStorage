@@ -78,6 +78,7 @@ public class FileService {
 
     public ResponseEntity<Object> getFile(String filename, String username) {
         String path = globalPath + "/" + username + "/" + filename;
+        System.out.println("get file from path --- " + path);
         File file = new File(path);
         if (!file.exists()){
             return ResponseSchema.error(400, "File " + filename + " not found in Cloud Store");

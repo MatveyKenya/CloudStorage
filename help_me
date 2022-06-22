@@ -1,0 +1,4 @@
+
+запуск контейнера postgres
+
+docker run -d --mount type=volume,src=sql_data,target=/var/lib/postgresql/data -e POSTGRES_PASSWORD=mysecretpassword -p 5433:5432 --name top2 postgres

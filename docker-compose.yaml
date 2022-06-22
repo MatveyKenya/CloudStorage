@@ -1,7 +1,39 @@
 version: "3.7"
 
 services:
-  app1:
+
+  postgres:
+    image: postgres
+    container_name: postgres-base
+    ports:
+      - "5433:5432"
+    networks:
+      - localnet
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    volumes:
+      - type: volume
+        source: sql_data
+        target: /var/lib/postgresql/data
+
+  my-app1:
+    container_name: app
     build: ./
     ports:
       - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - localnet
+    volumes:
+      - type: bind
+        source: D:/fileStorage
+        target: /var/fileStorage
+
+
+volumes:
+  sql_data:
+
+networks:
+  localnet:
+    driver: bridge
