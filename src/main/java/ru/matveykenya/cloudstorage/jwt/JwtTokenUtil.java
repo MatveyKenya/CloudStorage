@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtTokenUtil {
@@ -29,11 +30,6 @@ public class JwtTokenUtil {
     public JwtTokenUtil(UserService userService) {
         this.userService = userService;
     }
-
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 
     @PostConstruct
     protected void init() {
@@ -59,7 +55,7 @@ public class JwtTokenUtil {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userService.findByUsername(getUsername(token));
         System.out.println(userDetails);
-        return new UsernamePasswordAuthenticationToken(userDetails, "");
+        return new UsernamePasswordAuthenticationToken(userDetails, "", List.of());   // вот здесь аутентификация но authenticated = false почему?
     }
 
     public String getUsername(String token) {
@@ -67,7 +63,11 @@ public class JwtTokenUtil {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        return req.getHeader("auth-token");
+        String token = req.getHeader("auth-token");
+        if (token != null && token.startsWith("Bearer")){
+            token = token.substring(7);
+        }
+        return token;
     }
 
     public boolean validate(String token) {

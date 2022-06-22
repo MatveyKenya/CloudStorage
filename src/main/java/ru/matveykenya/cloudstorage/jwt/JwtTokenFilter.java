@@ -1,22 +1,15 @@
 package ru.matveykenya.cloudstorage.jwt;
 
 import lombok.NonNull;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.matveykenya.cloudstorage.repository.UserRepository;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -44,7 +37,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // Get user identity and set it on the spring security context
         Authentication auth = jwtTokenUtil.getAuthentication(token);
         System.out.println(auth);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        SecurityContextHolder.getContext().setAuthentication(auth);  // так ли аутентифик проходит?
         System.out.println("set auth");
         chain.doFilter(request, response);
     }

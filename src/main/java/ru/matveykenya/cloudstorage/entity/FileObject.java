@@ -22,7 +22,7 @@ public class FileObject {
     private String filename;
 
     @Column
-    private String description;
+    private long size; //размер в байтах
 
     @JsonIgnore
     @ManyToOne

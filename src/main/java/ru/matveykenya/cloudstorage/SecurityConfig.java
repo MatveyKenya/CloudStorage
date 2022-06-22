@@ -19,6 +19,7 @@ import ru.matveykenya.cloudstorage.repository.UserRepository;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.util.Collections;
 
 @EnableWebSecurity
 @Configuration
@@ -48,9 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
+        CorsConfiguration config = new CorsConfiguration()
+                .setAllowedOriginPatterns(Collections.singletonList("*"));
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
@@ -60,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().dataSource(dataSource);
-        //auth.userDetailsService(userRepository::findUserByUsername);
     }
 
     @Override
