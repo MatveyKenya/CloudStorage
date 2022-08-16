@@ -60,7 +60,7 @@ public class FileService {
         return ResponseSchema.error(500, "Error getting file list");
     }
 
-    public ResponseEntity<Object> deleteFile(String filename, String username) throws FileNotFoundException {
+    public ResponseEntity<Object> deleteFile(String filename, String username) {
         FileObject fileObject = repository.findByFilenameAndUser(filename, userRepository.findUserByUsername(username));
         if (fileObject != null){
             String path = globalPath + "/" + username + "/" + filename;
